@@ -22,18 +22,16 @@ public class Usuario {
         return gerador.gerarSenha();
     }
 
-    public void adicionarUsuario(int id,String nome, String email, String senha) {
-        String sql = "INSERT INTO usuarios (id, nome, email, senha) VALUES (?, ?, ?, ?)";
+    public void adicionarUsuario() {
+        String sql = "INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)";
         try (Connection c = connectionFactory.obtemConexao();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
-            // Preenche os dados faltantes
-            ps.setInt(1, id);
-            ps.setString(2, nome);
-            ps.setString(3, email);
-            ps.setString(4, senha);
+            ps.setString(1, nome);
+            ps.setString(2, email);
+            ps.setString(3, senha);
 
-            // Executa o comando
+
             ps.executeUpdate();
             System.out.println("Usuário adicionado ao banco de dados com sucesso!");
         } catch (SQLException e) {
