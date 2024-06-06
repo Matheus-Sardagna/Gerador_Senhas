@@ -17,6 +17,8 @@ public class Tela_acesso extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+    private JTextField txtNome;
+    private JTextField txtEmail;
     private JTextField txtSenhaGerada;
     private JButton btnNumCaracteres;
     private JCheckBox chckbxMaiuscula;
@@ -24,20 +26,21 @@ public class Tela_acesso extends JFrame {
     private JCheckBox chckbxNumero;
     private JCheckBox chckbxEspecial;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Tela_acesso frame = new Tela_acesso();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                try {
+//                    Tela_acesso frame = new Tela_acesso();
+//                    frame.setVisible(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
 
     public Tela_acesso() {
+        Usuario usuario = new Usuario();
         setTitle("Tela de acesso");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 500, 300);
@@ -47,10 +50,26 @@ public class Tela_acesso extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("Gerar senha");
-        lblNewLabel.setBounds(180, 11, 106, 33);
-        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
-        contentPane.add(lblNewLabel);
+        JLabel lblNome = new JLabel("Nome");
+        lblNome.setBounds(100, 20, 100, 30);
+        contentPane.add(lblNome);
+
+        txtNome = new JTextField();
+        txtNome.setBounds(200, 20, 200, 30);
+        contentPane.add(txtNome);
+
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setBounds(100, 60, 100, 30);
+        contentPane.add(lblEmail);
+
+        txtEmail = new JTextField();
+        txtEmail.setBounds(200, 60, 200, 30);
+        contentPane.add(txtEmail);
+
+//        JLabel lblNewLabel = new JLabel("Gerar senha");
+//        lblNewLabel.setBounds(180, 11, 106, 33);
+//        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+//        contentPane.add(lblNewLabel);
 
         JLabel lblNewLabel_1 = new JLabel("Quantidade de caracteres");
         lblNewLabel_1.setBounds(207, 86, 200, 14);
@@ -63,9 +82,9 @@ public class Tela_acesso extends JFrame {
         contentPane.add(btnNumCaracteres);
         btnNumCaracteres.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String selectedValue = JOptionPane.showInputDialog(null, "Selecione a quantidade de caracteres (1-9):");
-                if (selectedValue != null && selectedValue.matches("[1-9]")) {
-                    btnNumCaracteres.setText(selectedValue);
+                String selecioneValor = JOptionPane.showInputDialog(null, "Selecione a quantidade de caracteres (1-9):");
+                if (selecioneValor != null && selecioneValor.matches("[1-9]")) {
+                    btnNumCaracteres.setText(selecioneValor);
                 } else {
                     JOptionPane.showMessageDialog(null, "Por favor, insira um número válido entre 1 e 9.");
                 }
@@ -92,7 +111,6 @@ public class Tela_acesso extends JFrame {
         btnGerarSenha.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int numCaracteres = Integer.parseInt(btnNumCaracteres.getText());
-
                 boolean incluirMaiuscula = chckbxMaiuscula.isSelected();
                 boolean incluirMinuscula = chckbxMinuscula.isSelected();
                 boolean incluirNumero = chckbxNumero.isSelected();
@@ -102,9 +120,16 @@ public class Tela_acesso extends JFrame {
                     JOptionPane.showMessageDialog(null, "Selecione pelo menos uma opção.");
                     return;
                 }
-
-                String senha = gerarSenha(numCaracteres, incluirMaiuscula, incluirMinuscula, incluirNumero, incluirEspecial);
+                usuario.setNome(txtNome.getText());
+                usuario.setEmail((txtEmail.getText()));
+                usuario.definirCriterios(numCaracteres,incluirMaiuscula, incluirMinuscula, incluirNumero, incluirEspecial);
+                String senha = usuario.gerarSenha();
                 txtSenhaGerada.setText(senha);
+                usuario.setSenha(senha);
+
+                usuario.adicionarUsuario();
+                txtSenhaGerada.setText(senha);
+                JOptionPane.showMessageDialog(null, "Usuário e senha gerados com sucesso!");
             }
         });
         btnGerarSenha.setBackground(Color.WHITE);
@@ -141,27 +166,5 @@ public class Tela_acesso extends JFrame {
         txtSenhaGerada.setColumns(10);
     }
 
-    private String gerarSenha(int numCaracteres, boolean incluirMaiuscula, boolean incluirMinuscula, boolean incluirNumero, boolean incluirEspecial) {
-        String maiusculas = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String minusculas = "abcdefghijklmnopqrstuvwxyz";
-        String numeros = "0123456789";
-        String especiais = "!@#$%&*";
 
-        StringBuilder caracteres = new StringBuilder();
-
-        if (incluirMaiuscula) caracteres.append(maiusculas);
-        if (incluirMinuscula) caracteres.append(minusculas);
-        if (incluirNumero) caracteres.append(numeros);
-        if (incluirEspecial) caracteres.append(especiais);
-
-        Random random = new Random();
-        StringBuilder senha = new StringBuilder();
-
-        for (int i = 0; i < numCaracteres; i++) {
-            int index = random.nextInt(caracteres.length());
-            senha.append(caracteres.charAt(index));
-        }
-
-        return senha.toString();
-    }
 }
