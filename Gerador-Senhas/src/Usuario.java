@@ -7,6 +7,8 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
+
+    private String nomeAntigo;
     private Criterios criterios;
 
 
@@ -40,6 +42,47 @@ public class Usuario {
         }
     }
 
+    public void atualizarUsuario() {
+        String sql = "UPDATE usuario SET senha = ? WHERE nome = ?";
+        try(Connection c = connectionFactory.obtemConexao();
+            PreparedStatement ps = c.prepareStatement(sql)){
+            ps.setString(1, senha);
+            ps.setString(2,nome);
+            int verificador = ps.executeUpdate();
+
+            if (verificador > 0){
+                System.out.println("Senha Atualizada com sucesso");
+            }
+            else {
+                System.out.println("Usuário " + nome + " não encontrado");
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Erro em atualizar o usuário");
+        }
+    }
+
+    public void deletarUsuario() {
+        String sql = "DELETE FROM usuario WHERE nome = ?";
+        try(Connection c = connectionFactory.obtemConexao();
+            PreparedStatement ps = c.prepareStatement(sql)){
+            ps.setString(1, nome);
+            int verificador = ps.executeUpdate();
+
+            if (verificador > 0){
+                System.out.println("Usuário deletado com sucesso");
+            }
+            else {
+                System.out.println("Usuário " + nome  + " não encontrado");
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Erro em deletar usuário o usuário");
+        }
+    }
+
     public String getNome() {
         return nome;
     }
@@ -50,6 +93,14 @@ public class Usuario {
 
     public String getSenha() {
         return senha;
+    }
+
+    public String getNomeAntigo() {
+        return nomeAntigo;
+    }
+
+    public void setNomeAntigo(String nomeAntigo) {
+        this.nomeAntigo = nomeAntigo;
     }
 
     public void setNome(String nome) {
