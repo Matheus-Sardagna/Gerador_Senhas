@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -12,7 +9,7 @@ public class Tela_acesso extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-    private Usuario  usuario = new Usuario();
+    private Usuario usuario = new Usuario();
     private JTextField txtUsuario;
     private JLabel lblSenhaGerada;
     private JTextField txtSenha;
@@ -28,7 +25,6 @@ public class Tela_acesso extends JFrame {
     private boolean useNumbers = false;
     private boolean useSpecialChars = false;
     private JButton btnAvanar;
-
 
 
     public Tela_acesso() {
@@ -53,6 +49,7 @@ public class Tela_acesso extends JFrame {
         createSaveButton();
         createUpdateButton();
         createDeleteButton();
+        createAvancarButton();
     }
 
     private void createTitleTextField() {
@@ -149,7 +146,8 @@ public class Tela_acesso extends JFrame {
             if (!useUppercase && !useLowercase && !useNumbers && !useSpecialChars) {
                 JOptionPane.showMessageDialog(null, "Selecione ao menos um tipo de caractere.");
             } else {
-                usuario.definirCriterios(9,useUppercase,useLowercase,useNumbers,useSpecialChars);
+                int comprimeto = Integer.parseInt(JOptionPane.showInputDialog(null,"Escolha o comprimeto de 1 ate 9: "));
+                usuario.definirCriterios(comprimeto, useUppercase, useLowercase, useNumbers, useSpecialChars);
                 String senhaGerada = usuario.gerarSenha();
                 lblSenhaGerada.setText("" + senhaGerada);
             }
@@ -176,11 +174,22 @@ public class Tela_acesso extends JFrame {
 
     private void createUpdateButton() {
         JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnAtualizar.setBackground(UIManager.getColor("ScrollBar.background"));
+        btnAtualizar.setBounds(20, 232, 93, 25);
+        contentPane.add(btnAtualizar);
         btnAtualizar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String usuarioAtualizar = JOptionPane.showInputDialog(null, "Digite o usuário para o qual deseja alterar a senha:");
                 if (usuarioAtualizar != null && !usuarioAtualizar.isEmpty()) {
-                    String senhaAtualizar = JOptionPane.showInputDialog(null, "Digite a nova senha para o usuário " + usuarioAtualizar + ":");
+                    int tamanho = Integer.parseInt(JOptionPane.showInputDialog(null,"Escolha cmprimento da senha"));
+                    boolean incluirMaiusculas = JOptionPane.showConfirmDialog(null, "Incluir letras maiúsculas?", "Critérios de Senha", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                    boolean incluirMinusculas = JOptionPane.showConfirmDialog(null, "Incluir letras minúsculas?", "Critérios de Senha", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                    boolean incluirNumeros = JOptionPane.showConfirmDialog(null, "Incluir números?", "Critérios de Senha", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                    boolean incluirCaracteresEspeciais = JOptionPane.showConfirmDialog(null, "Incluir caracteres especiais?", "Critérios de Senha", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                    usuario.definirCriterios(tamanho,incluirMaiusculas,incluirMinusculas,incluirNumeros,incluirCaracteresEspeciais);
+                    String senhaAtualizar = usuario.gerarSenha();
+
                     if (senhaAtualizar != null && !senhaAtualizar.isEmpty()) {
                         txtUsuario.setText(usuarioAtualizar);
                         txtSenha.setText(senhaAtualizar);
@@ -196,48 +205,46 @@ public class Tela_acesso extends JFrame {
                 }
             }
         });
+        contentPane.add(btnAtualizar);
     }
 
 
     private void createDeleteButton() {
-            JButton btnExcluir = new JButton("Excluir");
-            btnExcluir.setFont(new Font("Tahoma", Font.PLAIN, 14));
-            btnExcluir.setBackground(UIManager.getColor("ScrollBar.background"));
-            btnExcluir.setBounds(133, 232, 93, 25);
-            btnExcluir.addActionListener(new ActionListener() {
+        JButton btnExcluir = new JButton("Excluir");
+        btnExcluir.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnExcluir.setBackground(UIManager.getColor("ScrollBar.background"));
+        btnExcluir.setBounds(133, 232, 93, 25);
+        btnExcluir.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    usuario.deletarUsuario();
+            public void actionPerformed(ActionEvent e) {
+                String user = JOptionPane.showInputDialog(null, "Digite o usuário para excluir:");
 
-//                    if (user.isEmpty()) {
-//                        JOptionPane.showMessageDialog(null, "Digite o usuário para excluir a conta.");
-//                    } else {
-//                        contaExcluida = usuario.deletarUsuario();
-
-//                        if (contaExcluida) {
-//                            txtUsuario.setText("");
-//                            txtSenha.setText("");
-//                            txtEmail.setText("");
-//                            JOptionPane.showMessageDialog(null, "Conta excluída com sucesso.");
-//                        } else {
-//                            JOptionPane.showMessageDialog(null, "Falha ao excluir a conta. Verifique os dados informados.");
-//                        }
-                    }
+                if (user == null || user.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Digite o usuário para excluir.");
+                    return;
                 }
-                });
-            contentPane.add(btnExcluir);
+                JOptionPane.showMessageDialog(null,"Excluído com sucesso!!");
+                usuario.setNome(user.trim());
+                usuario.deletarUsuario();
+            }
+        });
+        contentPane.add(btnExcluir);
+    }
+    private void createAvancarButton() {
+        btnAvanar = new JButton("Avançar");
+        btnAvanar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnAvanar.setBackground(UIManager.getColor("ScrollBar.background"));
+        btnAvanar.setBounds(371, 232, 93, 25);
+        contentPane.add(btnAvanar);
 
+        btnAvanar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Tela_acesso2 layout2 = new Tela_acesso2();
+                layout2.setVisible(true);
+                dispose();
+            }
+        });
+        contentPane.add(btnAvanar);
+    }
 
-        }
-        //btnAvanar = new JButton("Avançar");
-//        btnAvanar.addActionListener(new ActionListener() {
-//
-//            public void actionPerformed(ActionEvent e) {
-//            Tela_acesso2 tela2 = new Tela_acesso2();
-//            tela2.setVisible(true);
-//
-//        };
-//
-//    });
-//
 }
