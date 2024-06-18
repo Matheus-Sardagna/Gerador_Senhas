@@ -8,7 +8,6 @@ public class Usuario {
     private String email;
     private String senha;
 
-    private String nomeAntigo;
     private Criterios criterios;
 
 
@@ -95,13 +94,6 @@ public class Usuario {
         return senha;
     }
 
-    public String getNomeAntigo() {
-        return nomeAntigo;
-    }
-
-    public void setNomeAntigo(String nomeAntigo) {
-        this.nomeAntigo = nomeAntigo;
-    }
 
     public void setNome(String nome) {
         this.nome = nome;
