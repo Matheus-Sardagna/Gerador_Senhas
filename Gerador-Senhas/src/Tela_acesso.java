@@ -163,10 +163,12 @@ public class Tela_acesso extends JFrame {
         btnSalvar.setBounds(254, 232, 93, 25);
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                usuario.setNome(txtUsuario.getText());
-                usuario.setEmail(txtEmail.getText());
-                usuario.setSenha(lblSenhaGerada.getText());
-                usuario.adicionarUsuario();
+                if (txtSenha == null ) {
+                    usuario.setNome(txtUsuario.getText());
+                    usuario.setEmail(txtEmail.getText());
+                    usuario.setSenha(lblSenhaGerada.getText());
+                    usuario.adicionarUsuario();
+                }
             }
         });
         contentPane.add(btnSalvar);

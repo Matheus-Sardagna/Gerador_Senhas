@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Random;
 
 public class GeradorDeSenhas {
@@ -13,6 +14,7 @@ public class GeradorDeSenhas {
 
     public String gerarSenha() {
         if (!criterios.saoValidos()) {
+            JOptionPane.showMessageDialog(null,"Critérios invalidos");
             throw new IllegalArgumentException("Critérios inválidos para a geração da senha.");
         }
 

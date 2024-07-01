@@ -34,6 +34,6 @@ public class Criterios {
     }
 
     public boolean saoValidos() {
-        return comprimento > 0 && (incluirMaiusculas || incluirMinusculas || incluirNumeros || incluirCaracteresEspeciais);
+        return comprimento > 0 && comprimento <= 9 && (incluirMaiusculas || incluirMinusculas || incluirNumeros || incluirCaracteresEspeciais);
     }
 }
